@@ -1,9 +1,12 @@
 import ShopNavBar from "../../components/ShopNavBar"
 import Products from "../../components/Products"
 import { useGetShopItemsByIdQuery, useGetShopsQuery } from "../../api/api"
+import { useSelector } from "react-redux"
+import { selectActiveShopId } from "../../features/shop/shopSlice"
 export default function Shops() {
   const { data: shops = [] } = useGetShopsQuery()
-  const { data: items = [] } = useGetShopItemsByIdQuery(shops[0]?.id, {
+  const activeShopId = useSelector(selectActiveShopId)
+  const { data: items = [] } = useGetShopItemsByIdQuery(activeShopId, {
     skip: shops.length === 0,
   })
   return (
