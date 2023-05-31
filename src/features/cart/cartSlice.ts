@@ -17,7 +17,7 @@ export type ItemAdditionPayload = {
 
 const initialState: CartState = {
   userId: 1,
-  activeShopId: 1,
+  activeShopId: 0,
   items: [],
 }
 

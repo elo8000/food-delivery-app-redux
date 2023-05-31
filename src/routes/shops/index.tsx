@@ -1,10 +1,18 @@
 import ShopNavBar from "../../components/ShopNavBar"
 import Products from "../../components/Products"
 import { useGetShopItemsByIdQuery, useGetShopsQuery } from "../../api/api"
-import { useSelector } from "react-redux"
-import { selectActiveShopId } from "../../features/cart/cartSlice"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  selectActiveShopId,
+  setActiveShopId,
+} from "../../features/cart/cartSlice"
+import { useEffect } from "react"
 export default function Shops() {
   const { data: shops = [] } = useGetShopsQuery()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (shops?.length > 0) dispatch(setActiveShopId(shops[0].id))
+  }, [shops])
   const activeShopId = useSelector(selectActiveShopId)
   const { data: items = [] } = useGetShopItemsByIdQuery(activeShopId, {
     skip: shops.length === 0,
