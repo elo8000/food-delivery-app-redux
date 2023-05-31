@@ -9,21 +9,26 @@ import {
 import CartItems from "../../components/CartItems"
 import { useGetShopItemsByIdQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/cart/cartSlice"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
 export default function Cart() {
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
   const activeShopId = useSelector(selectActiveShopId)
-  const { data: shopItems = [] } = useGetShopItemsByIdQuery(activeShopId)
-  const cartItems = cart.items.map((cartItem) => {
-    const shopItem = shopItems.find((value) => value.id === cartItem.id)
-    if (shopItem === undefined) throw "No such shop item!"
-    return {
-      count: cartItem.count,
-      ...shopItem,
-    }
+  const { data: shopItems = [] } = useGetShopItemsByIdQuery(activeShopId, {
+    skip: activeShopId === 0 || cart.items.length === 0,
   })
+  const cartItems = useMemo(() => {
+    if (shopItems.length === 0) return []
+    return cart.items.map((cartItem) => {
+      const shopItem = shopItems.find((value) => value.id === cartItem.id)
+      if (shopItem === undefined) throw "No such item"
+      return {
+        count: cartItem.count,
+        ...shopItem,
+      }
+    })
+  }, [cart, shopItems])
   const [userName, setUserName] = useState("")
   const [userEmail, setUserEmail] = useState("")
   const [userPhone, setUserPhone] = useState("")
@@ -32,7 +37,6 @@ export default function Cart() {
   const [checkout] = useCheckoutMutation()
 
   useEffect(() => {
-    console.log("asd")
     dispatch(retrieveStateFromLocalStoreage())
   }, [])
 

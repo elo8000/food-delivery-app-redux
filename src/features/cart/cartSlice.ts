@@ -22,7 +22,11 @@ const initialState: CartState = {
 }
 
 function saveStateToLocalStorage(state: CartState) {
-  window.localStorage.setItem("cart", JSON.stringify(state))
+  try {
+    window.localStorage.setItem("cart", JSON.stringify(state))
+  } catch (e) {
+    console.log("Localstorage not avaliable")
+  }
 }
 
 export const cartSlice = createSlice({
@@ -92,7 +96,9 @@ export const cartSlice = createSlice({
       try {
         const cart = window.localStorage.getItem("cart")
         if (cart) {
-          state.items = JSON.parse(cart).items
+          const parsedCart = JSON.parse(cart)
+          state.items = parsedCart.items
+          state.activeShopId = parsedCart.activeShopId
         }
       } catch (e) {
         console.log("Invalid localstorage state or localstorage not avaliable")
