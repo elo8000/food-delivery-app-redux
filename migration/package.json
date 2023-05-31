@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "knex": "^2.4.2",
+    "mysql2": "^3.3.3"
+  },
+  "scripts": {
+    "migrate": "knex migrate:latest --env production",
+    "seed": "knex seed:run --env production"
+  },
+  "devDependencies": {}
+}
