@@ -3,7 +3,6 @@ import { RootState } from "../../app/store"
 
 export interface CartState {
   userId: number
-  shopId: number
   items: {
     id: number
     count: number
@@ -12,7 +11,6 @@ export interface CartState {
 
 const initialState: CartState = {
   userId: 1,
-  shopId: 0,
   items: [],
 }
 
@@ -57,7 +55,8 @@ export const { addItem, removeItem } = cartSlice.actions
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectItems = (state: RootState) => state.cart.items
-export const selectShopId = (state: RootState) => state.cart.shopId
 export const selectCart = (state: RootState) => state.cart
+export const selectCartHasItems = (state: RootState) =>
+  state.cart.items.length > 0
 
 export default cartSlice.reducer
