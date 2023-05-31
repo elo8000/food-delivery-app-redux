@@ -50,7 +50,6 @@ export default function Cart() {
     skip: lastClickGelocation.lat > 95,
   })
   useEffect(() => {
-    console.log(address.data)
     if (address.isSuccess && address.data.status === "OK") {
       setUserAddress(address.data.results[0].formatted_address)
     }

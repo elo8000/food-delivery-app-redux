@@ -1,9 +1,15 @@
 import GoogleMapReact from "google-map-react"
-import { ReactNode, useEffect } from "react"
+import { useRef } from "react"
 
 export default function GoogleMap(props: {
   onClick?: (lat: number, lng: number) => void
-  children?: ReactNode
+  markerLocations?: {
+    position: {
+      lat: number
+      lng: number
+    }
+    title: string
+  }[]
 }) {
   const defaultProps = {
     center: {
@@ -12,9 +18,19 @@ export default function GoogleMap(props: {
     },
     zoom: 11,
   }
+  const mapRef = useRef<any>(null)
+  const mapsRef = useRef<any>(null)
 
-  function handleApiLoaded(map: any, maps: any): void {
-    console.log(map)
+  const onGoogleApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
+    mapRef.current = map
+    mapsRef.current = maps
+    /*
+    const mapMarker = new maps.Marker({
+      position: { lat: 100, lng: 100 },
+      map,
+      title: "Yo mama",
+    })
+    */
   }
 
   return (
@@ -23,11 +39,19 @@ export default function GoogleMap(props: {
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyDaoHl0JekUxZ8rKHyIHSnJ4ctrMtvPcqs" }}
         defaultCenter={defaultProps.center}
-        yesIWantToUseGoogleMapApiInternals
         defaultZoom={defaultProps.zoom}
-        onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+        yesIWantToUseGoogleMapApiInternals
+        onGoogleApiLoaded={onGoogleApiLoaded}
         onClick={(e) => {
           if (props.onClick) props.onClick(e.lat, e.lng)
+          if (mapsRef.current) {
+            const mapMarker = new mapsRef.current.Marker({
+              position: { lat: e.lat, lng: e.lng },
+              map: mapRef.current,
+              title: "Yo mama",
+            })
+            console.log(mapMarker)
+          }
         }}
       />
     </div>
