@@ -4,9 +4,8 @@ import { selectCart, selectTotalCartPrice } from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
 import { useGetShopItemsByIdQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/shop/shopSlice"
-export default function Cart(props: {
-  items: { name: string; price: number; count: number }[]
-}) {
+import { useState } from "react"
+export default function Cart() {
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
   const activeShopId = useSelector(selectActiveShopId)
@@ -20,32 +19,40 @@ export default function Cart(props: {
       ...shopItem,
     }
   })
+  const [userName, setUserName] = useState("")
+  const [userEmail, setUserEmail] = useState("")
+  const [userPhone, setUserPhone] = useState("")
+  const [userAddress, setUserAddress] = useState("")
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
         <div className="flex flex-col w-full border-2 border-gray-600 rounded-md">
           <NamedInput
             name="Name"
-            onChange={() => {
-              return
+            value={userName}
+            setInput={(e) => {
+              setUserName(e)
             }}
           />
           <NamedInput
             name="Email"
-            onChange={() => {
-              return
+            value={userEmail}
+            setInput={(e) => {
+              setUserEmail(e)
             }}
           />
           <NamedInput
             name="Phone"
-            onChange={() => {
-              return
+            value={userPhone}
+            setInput={(e) => {
+              setUserPhone(e)
             }}
           />
           <NamedInput
             name="Address"
-            onChange={() => {
-              return
+            value={userAddress}
+            setInput={(e) => {
+              setUserAddress(e)
             }}
           />
         </div>
