@@ -3,9 +3,10 @@ import { RootState } from "../../app/store"
 
 export interface CartState {
   userId: number
+  activeShopId: number
   items: {
     id: number
-    price: number //TODO: move to store
+    price: number
     count: number
   }[]
 }
@@ -16,6 +17,7 @@ export type ItemAdditionPayload = {
 
 const initialState: CartState = {
   userId: 1,
+  activeShopId: 1,
   items: [],
 }
 
@@ -81,11 +83,32 @@ export const cartSlice = createSlice({
       state.userId = action.payload
       saveStateToLocalStorage(state)
     },
+    setActiveShopId: (state, action: PayloadAction<number>) => {
+      state.activeShopId = action.payload
+      saveStateToLocalStorage(state)
+    },
+    retrieveStateFromLocalStoreage: (state, action: PayloadAction<void>) => {
+      if (state.items.length !== 0) return
+      try {
+        const cart = window.localStorage.getItem("cart")
+        if (cart) {
+          state.items = JSON.parse(cart).items
+        }
+      } catch (e) {
+        console.log("Invalid localstorage state or localstorage not avaliable")
+      }
+    },
   },
 })
 
-export const { addItem, removeItem, setItemCount, emptyCart } =
-  cartSlice.actions
+export const {
+  addItem,
+  removeItem,
+  setItemCount,
+  emptyCart,
+  retrieveStateFromLocalStoreage,
+  setActiveShopId,
+} = cartSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -101,5 +124,6 @@ export const selectTotalCartPrice = (state: RootState) => {
 }
 export const selectCartHasItems = (state: RootState) =>
   state.cart.items.length > 0
+export const selectActiveShopId = (state: RootState) => state.cart.activeShopId
 
 export default cartSlice.reducer

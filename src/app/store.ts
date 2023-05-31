@@ -1,14 +1,12 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
 import counterReducer from "../features/counter/counterSlice"
 import cartReducer from "../features/cart/cartSlice"
-import shopReducer from "../features/shop/shopSlice"
 import api from "../api/api"
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     cart: cartReducer,
-    shop: shopReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

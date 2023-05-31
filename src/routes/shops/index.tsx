@@ -2,7 +2,7 @@ import ShopNavBar from "../../components/ShopNavBar"
 import Products from "../../components/Products"
 import { useGetShopItemsByIdQuery, useGetShopsQuery } from "../../api/api"
 import { useSelector } from "react-redux"
-import { selectActiveShopId } from "../../features/shop/shopSlice"
+import { selectActiveShopId } from "../../features/cart/cartSlice"
 export default function Shops() {
   const { data: shops = [] } = useGetShopsQuery()
   const activeShopId = useSelector(selectActiveShopId)

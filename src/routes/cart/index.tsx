@@ -2,13 +2,14 @@ import { useDispatch, useSelector } from "react-redux"
 import NamedInput from "../../components/NamedInput"
 import {
   emptyCart,
+  retrieveStateFromLocalStoreage,
   selectCart,
   selectTotalCartPrice,
 } from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
 import { useGetShopItemsByIdQuery } from "../../api/api"
-import { selectActiveShopId } from "../../features/shop/shopSlice"
-import { useState } from "react"
+import { selectActiveShopId } from "../../features/cart/cartSlice"
+import { useEffect, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
 export default function Cart() {
   const cart = useSelector(selectCart)
@@ -29,6 +30,12 @@ export default function Cart() {
   const [userAddress, setUserAddress] = useState("")
   const dispatch = useDispatch()
   const [checkout] = useCheckoutMutation()
+
+  useEffect(() => {
+    console.log("asd")
+    dispatch(retrieveStateFromLocalStoreage())
+  }, [])
+
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">

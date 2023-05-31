@@ -1,6 +1,6 @@
-import { setActiveShop } from "../../features/shop/shopSlice"
+import { setActiveShopId } from "../../features/cart/cartSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { selectActiveShopId } from "../../features/shop/shopSlice"
+import { selectActiveShopId } from "../../features/cart/cartSlice"
 import styles from "./styles.module.css"
 import { selectCartHasItems } from "../../features/cart/cartSlice"
 export default function ShopNavBarItem(props: { name: string; id: number }) {
@@ -12,7 +12,7 @@ export default function ShopNavBarItem(props: { name: string; id: number }) {
     <button
       className={`${activeStyle} w-1/2 p-4 rounded-md border-gray-600 border-2`}
       onClick={() => {
-        if (!cartHasItems) dispatch(setActiveShop(props.id))
+        if (!cartHasItems) dispatch(setActiveShopId(props.id))
       }}
     >
       {props.name}
