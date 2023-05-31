@@ -19,6 +19,10 @@ const initialState: CartState = {
   items: [],
 }
 
+function saveStateToLocalStorage(state: CartState) {
+  window.localStorage.setItem("cart", JSON.stringify(state))
+}
+
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
@@ -36,6 +40,7 @@ export const cartSlice = createSlice({
           count: 1,
         })
       }
+      saveStateToLocalStorage(state)
     },
     removeItem: (state, action: PayloadAction<number>) => {
       let itemIndex = state.items.findIndex((item) => {
@@ -48,6 +53,7 @@ export const cartSlice = createSlice({
           state.items[itemIndex].count--
         }
       }
+      saveStateToLocalStorage(state)
     },
     setItemCount: (
       state,
@@ -65,12 +71,15 @@ export const cartSlice = createSlice({
       } else {
         state.items.push(action.payload)
       }
+      saveStateToLocalStorage(state)
     },
     emptyCart: (state, action: PayloadAction<void>) => {
       state.items = []
+      saveStateToLocalStorage(state)
     },
     setUserId: (state, action: PayloadAction<number>) => {
       state.userId = action.payload
+      saveStateToLocalStorage(state)
     },
   },
 })
