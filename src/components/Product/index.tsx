@@ -11,7 +11,7 @@ export default function Product(props: { item: ShopItem }) {
       <button
         className="self-end border-2 border-gray-600 bg-gray-200 py-2 px-4 rounded-md"
         onClick={() => {
-          dispatch(addItem(props.item.id))
+          dispatch(addItem({ id: props.item.id, price: 10 })) //TODO item price
         }}
       >
         Add to cart
