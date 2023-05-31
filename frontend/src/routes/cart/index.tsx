@@ -64,7 +64,7 @@ export default function Cart() {
             onClick={(lat: number, lng: number) =>
               setLastClickGelocation({ lat, lng })
             }
-          />
+          ></GoogleMap>
           <NamedInput
             name="Name"
             value={userName}

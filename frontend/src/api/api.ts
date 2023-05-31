@@ -12,6 +12,11 @@ export const api = createApi({
     getShopItemsById: builder.query<ShopItem[], number>({
       query: (id) => `/shop/${id}/items`,
     }),
+    getShopGeolocationById: builder.query<{ lat: number; lng: number }, number>(
+      {
+        query: (id) => `/shop/${id}/geolocation`,
+      },
+    ),
     checkout: builder.mutation<string, CartState>({
       query: (cart: CartState) => ({
         url: "/checkout",

@@ -1,12 +1,14 @@
 import GoogleMapReact from "google-map-react"
+import { ReactNode, useEffect } from "react"
 
 export default function GoogleMap(props: {
   onClick?: (lat: number, lng: number) => void
+  children?: ReactNode
 }) {
   const defaultProps = {
     center: {
-      lat: 10.99835602,
-      lng: 77.01502627,
+      lat: 49.98081,
+      lng: 36.25272,
     },
     zoom: 11,
   }
@@ -27,7 +29,7 @@ export default function GoogleMap(props: {
         onClick={(e) => {
           if (props.onClick) props.onClick(e.lat, e.lng)
         }}
-      ></GoogleMapReact>
+      />
     </div>
   )
 }
