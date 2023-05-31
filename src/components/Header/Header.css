@@ -1,0 +1,8 @@
+.separator:not(:last-child):after {
+  content: "";
+  border-left: 2px solid black;
+  height: 100%;
+}
+a.active {
+  text-decoration: underline;
+}
