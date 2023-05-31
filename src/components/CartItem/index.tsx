@@ -1,5 +1,4 @@
-import { addItem, setItemCount } from "../../features/cart/cartSlice"
-import { removeItem } from "../../features/cart/cartSlice"
+import { setItemCount } from "../../features/cart/cartSlice"
 import { useDispatch } from "react-redux"
 import { ShopItem } from "../../features/shop/shopSlice"
 
