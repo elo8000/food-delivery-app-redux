@@ -1,16 +1,20 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import NamedInput from "../../components/NamedInput"
-import { selectCart, selectTotalCartPrice } from "../../features/cart/cartSlice"
+import {
+  emptyCart,
+  selectCart,
+  selectTotalCartPrice,
+} from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
 import { useGetShopItemsByIdQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/shop/shopSlice"
 import { useState } from "react"
+import { useCheckoutMutation } from "../../api/api"
 export default function Cart() {
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
   const activeShopId = useSelector(selectActiveShopId)
   const { data: shopItems = [] } = useGetShopItemsByIdQuery(activeShopId)
-  console.log(shopItems, cart)
   const cartItems = cart.items.map((cartItem) => {
     const shopItem = shopItems.find((value) => value.id === cartItem.id)
     if (shopItem === undefined) throw "No such shop item!"
@@ -23,6 +27,8 @@ export default function Cart() {
   const [userEmail, setUserEmail] = useState("")
   const [userPhone, setUserPhone] = useState("")
   const [userAddress, setUserAddress] = useState("")
+  const dispatch = useDispatch()
+  const [checkout] = useCheckoutMutation()
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
@@ -60,7 +66,17 @@ export default function Cart() {
       </div>
       <div className="flex justify-end mb-4 mt-8">
         <p className="text-2xl mr-20">Total price: {totalPrice}</p>
-        <button className="w-40 h-12 border-2 font-bold rounded-xl border-gray-600">
+        <button
+          className="w-40 h-12 border-2 font-bold rounded-xl border-gray-600"
+          onClick={async () => {
+            try {
+              const resutl = await checkout(cart).unwrap()
+              dispatch(emptyCart())
+            } catch (e) {
+              throw "Failed to checkout"
+            }
+          }}
+        >
           Submit
         </button>
       </div>

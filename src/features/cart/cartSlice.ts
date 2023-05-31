@@ -66,13 +66,17 @@ export const cartSlice = createSlice({
         state.items.push(action.payload)
       }
     },
+    emptyCart: (state, action: PayloadAction<void>) => {
+      state.items = []
+    },
     setUserId: (state, action: PayloadAction<number>) => {
       state.userId = action.payload
     },
   },
 })
 
-export const { addItem, removeItem, setItemCount } = cartSlice.actions
+export const { addItem, removeItem, setItemCount, emptyCart } =
+  cartSlice.actions
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
