@@ -7,12 +7,13 @@ export type CartItemType = ShopItem & { count: number }
 export default function CartItem(props: { item: CartItemType }) {
   const dispatch = useDispatch()
   return (
-    <div className="flex w-80 h-60 gap-2 border-gray-600 border-2 p-4 rounded-md">
-      <img src={props.item.imageUrl}></img>
+    <div className="flex w-full h-60 gap-2 border-gray-600 border-2 p-4 rounded-md">
+      <img src={props.item.imageUrl || "via.placeholder.com/200x100"}></img>
       <div>
         <p>{props.item.name}</p>
         <p>Price: {props.item.price} each</p>
         <input
+          className="border-2 border-gray-600"
           type="number"
           onChange={(e) => {
             dispatch(

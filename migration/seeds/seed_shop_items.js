@@ -14,6 +14,7 @@ exports.seed = async function (knex) {
         name: faker.commerce.product,
         shop_id: () => faker.number.int({ min: 1, max: 50 }),
         price: () => faker.number.int({ min: 1, max: 50 }),
+        imageUrl: () => "http://via.placeholder.com/400x200",
       },
       500
     )

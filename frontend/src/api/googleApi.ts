@@ -22,7 +22,7 @@ const GOOGLE_API_KEY = "AIzaSyDaoHl0JekUxZ8rKHyIHSnJ4ctrMtvPcqs"
 
 // Define a service using a base URL and expected endpoints
 export const googleMapsApi = createApi({
-  reducerPath: "googleMapsApi",
+  reducerPath: "googleApi",
   baseQuery: fetchBaseQuery({}),
   endpoints: (builder) => ({
     getAddressByGeolocation: builder.query<GoogleGeocodeResponse, Coordinates>({
