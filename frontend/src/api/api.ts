@@ -8,8 +8,11 @@ export const api = createApi({
     baseUrl: import.meta.env.VITE_BACKEND_HOST || "http://localhost:3000",
   }),
   endpoints: (builder) => ({
-    getShops: builder.query<{ id: number; name: string }[], void>({
-      query: () => `/shopNames`,
+    getShops: builder.query<
+      { id: number; name: string; lat: number; lng: number }[],
+      void
+    >({
+      query: () => `/shops`,
     }),
     getShopItemsById: builder.query<ShopItem[], number>({
       query: (id) => `/shop/${id}/items`,

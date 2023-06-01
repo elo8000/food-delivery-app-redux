@@ -37,10 +37,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 app.get("/shops", async (req, res) => {
-  res.send(await knex("shops"));
-});
-app.get("/shopNames", async (req, res) => {
-  res.send(await knex("shops").select("id", "name"));
+  res.send(await knex("shops").select("id", "name", "lat", "lng"));
 });
 app.get("/shop/:id/items", async (req, res) => {
   res.send(
