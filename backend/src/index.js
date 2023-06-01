@@ -63,13 +63,16 @@ app.post("/checkout", async (req, res) => {
       price: item.price,
     };
   });
-  for (const orderItem of orderItems) {
-    const price = await knex
-      .from("shop_items")
-      .select("price")
-      .where("shop_item_id", orderItem.shop_item_id);
-    if (price !== orderItem.price)
+  for (const item of orderItems) {
+    const serverPrice = (
+      await knex
+        .from("shop_items")
+        .select("price")
+        .where("id", item.shop_item_id)
+    )[0].price;
+    if (serverPrice !== item.price) {
       throw "User attempting to buy an item listed for a different price than on a server";
+    }
   }
   await knex.insert(orderItems).into("order_items");
   res.status(200).send();

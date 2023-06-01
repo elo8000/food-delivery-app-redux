@@ -18,5 +18,5 @@ exports.seed = async function (knex) {
       500
     )
   );
-  await fixSeq(knex, "orders");
+  await fixSeq(knex, "shop_items");
 };
