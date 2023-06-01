@@ -73,7 +73,7 @@ export default function Cart() {
   )
   useEffect(() => {
     if (address.isSuccess && address.data.status === "OK") {
-      setUserAddress(address.data.results[0].formatted_address)
+      dispatch(setAddress(address.data.results[0].formatted_address))
     }
   }, [address])
   const shops = useGetShopsQuery()
