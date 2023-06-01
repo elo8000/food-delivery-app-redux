@@ -1,12 +1,10 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit"
-import counterReducer from "../features/counter/counterSlice"
 import cartReducer from "../features/cart/cartSlice"
 import api from "../api/api"
 import googleMapsApi from "../api/googleApi"
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
     cart: cartReducer,
     [api.reducerPath]: api.reducer,
     [googleMapsApi.reducerPath]: googleMapsApi.reducer,

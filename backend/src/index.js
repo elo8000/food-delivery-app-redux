@@ -22,7 +22,7 @@ const knex = require("knex")({
       console.log(message);
     },
   },
-  debug: true,
+  debug: false,
 });
 
 const express = require("express");
@@ -49,10 +49,16 @@ app.get("/shop/:id/items", async (req, res) => {
 });
 app.post("/checkout", async (req, res) => {
   const timestamp = new Date().toISOString().slice(0, 19).replace("T", " ");
-  const order = { user_id: req.body.userId, timestamp: timestamp };
-  console.log(order);
+  const order = {
+    user_id: req.body.cart.userId,
+    timestamp: timestamp,
+    address: req.body.user.address,
+    email: req.body.user.email,
+    phone: req.body.user.phone,
+    name: req.body.user.name,
+  };
   const orderId = (await knex.insert(order, ["id"]).into("orders"))[0].id;
-  const orderItems = req.body.items.map((item) => {
+  const orderItems = req.body.cart.items.map((item) => {
     return {
       count: item.count,
       shop_item_id: item.id,
@@ -76,5 +82,5 @@ app.post("/checkout", async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
-  console.log(`Example app listening on port 3000`);
+  console.log(`Express listening on port 3000`);
 });

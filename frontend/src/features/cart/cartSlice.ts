@@ -101,7 +101,7 @@ export const cartSlice = createSlice({
           state.activeShopId = parsedCart.activeShopId
         }
       } catch (e) {
-        console.log("Invalid localstorage state or localstorage not avaliable")
+        console.log("Invalid localstorage state or localstorage not avaliable.")
       }
     },
   },

@@ -18,14 +18,13 @@ export default function CartItem(props: { item: CartItemType }) {
           className="border-2 border-gray-600"
           type="number"
           onChange={(e) => {
-            if (e.target.value.match(/^\d*$/g))
-              dispatch(
-                setItemCount({
-                  id: props.item.id,
-                  count: Number(e.target.value),
-                  price: props.item.price,
-                }),
-              )
+            dispatch(
+              setItemCount({
+                id: props.item.id,
+                count: Number(e.target.value),
+                price: props.item.price,
+              }),
+            )
           }}
           value={props.item.count}
         />
