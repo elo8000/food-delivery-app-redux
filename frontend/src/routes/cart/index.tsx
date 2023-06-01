@@ -4,6 +4,7 @@ import {
   emptyCart,
   retrieveStateFromLocalStoreage,
   selectCart,
+  selectCartHasItems,
   selectTotalCartPrice,
 } from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
@@ -86,6 +87,7 @@ export default function Cart() {
       })
     }
   }, [shops, activeShopId])
+  const cartHasItems = useSelector(selectCartHasItems)
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
@@ -156,8 +158,10 @@ export default function Cart() {
           className="w-40 h-12 border-2 font-bold rounded-xl border-gray-600"
           onClick={async () => {
             try {
-              const resutl = await checkout(cart).unwrap()
-              dispatch(emptyCart())
+              if (cartHasItems) {
+                const resutl = await checkout(cart).unwrap()
+                dispatch(emptyCart())
+              }
             } catch (e) {
               throw "Failed to checkout"
             }
