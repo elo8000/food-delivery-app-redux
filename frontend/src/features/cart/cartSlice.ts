@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "../../app/store"
 
 export interface CartState {
-  userId: number
   activeShopId: number
   items: {
     id: number
@@ -16,7 +15,6 @@ export type ItemAdditionPayload = {
 }
 
 const initialState: CartState = {
-  userId: 1, // for the purpuse of this test assigment everyone is user 1
   activeShopId: 0,
   items: [],
 }
@@ -81,10 +79,6 @@ export const cartSlice = createSlice({
     },
     emptyCart: (state, action: PayloadAction<void>) => {
       state.items = []
-      saveStateToLocalStorage(state)
-    },
-    setUserId: (state, action: PayloadAction<number>) => {
-      state.userId = action.payload
       saveStateToLocalStorage(state)
     },
     setActiveShopId: (state, action: PayloadAction<number>) => {

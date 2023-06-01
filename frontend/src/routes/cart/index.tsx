@@ -18,6 +18,13 @@ import {
   useGetRouteQuery,
 } from "../../api/googleApi"
 import { Coordinates } from "../../utils/utilTypes"
+import {
+  selectUser,
+  setAddress,
+  setEmail,
+  setName,
+  setPhone,
+} from "../../features/user/userSlice"
 export default function Cart() {
   const [activeShop, setActiveShop] = useState<{
     id: number
@@ -42,10 +49,6 @@ export default function Cart() {
       }
     })
   }, [cart, shopItems])
-  const [userName, setUserName] = useState("")
-  const [userEmail, setUserEmail] = useState("")
-  const [userPhone, setUserPhone] = useState("")
-  const [userAddress, setUserAddress] = useState("")
   const dispatch = useDispatch()
   const [checkout] = useCheckoutMutation()
   useEffect(() => {
@@ -88,6 +91,7 @@ export default function Cart() {
     }
   }, [shops, activeShopId])
   const cartHasItems = useSelector(selectCartHasItems)
+  const currentUser = useSelector(selectUser)
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
@@ -123,30 +127,30 @@ export default function Cart() {
           )}
           <NamedInput
             name="Name"
-            value={userName}
+            value={currentUser.name}
             setInput={(e) => {
-              setUserName(e)
+              dispatch(setName(e))
             }}
           />
           <NamedInput
             name="Email"
-            value={userEmail}
+            value={currentUser.email}
             setInput={(e) => {
-              setUserEmail(e)
+              dispatch(setEmail(e))
             }}
           />
           <NamedInput
             name="Phone"
-            value={userPhone}
+            value={currentUser.phone}
             setInput={(e) => {
-              setUserPhone(e)
+              dispatch(setPhone(e))
             }}
           />
           <NamedInput
             name="Address"
-            value={userAddress}
+            value={currentUser.address}
             setInput={(e) => {
-              setUserAddress(e)
+              dispatch(setAddress(e))
             }}
           />
         </div>
@@ -161,12 +165,7 @@ export default function Cart() {
               if (cartHasItems) {
                 const resutl = await checkout({
                   cart: cart,
-                  user: {
-                    name: userName,
-                    email: userEmail,
-                    address: userAddress,
-                    phone: userPhone,
-                  },
+                  user: currentUser,
                 }).unwrap()
                 dispatch(emptyCart())
               }

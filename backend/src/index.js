@@ -50,8 +50,8 @@ app.get("/shop/:id/items", async (req, res) => {
 app.post("/checkout", async (req, res) => {
   const timestamp = new Date().toISOString().slice(0, 19).replace("T", " ");
   const order = {
-    user_id: req.body.cart.userId,
     timestamp: timestamp,
+    user_id: req.body.user.id,
     address: req.body.user.address,
     email: req.body.user.email,
     phone: req.body.user.phone,
