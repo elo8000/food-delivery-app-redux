@@ -3,7 +3,6 @@
 Live preview available here
 https://app-delivery-frontend.vercel.app/
 
-
 ## How to run the application
 ### Before you do anything
 Navigatet to ```http://localhost:5173``` and clear your localstorage
