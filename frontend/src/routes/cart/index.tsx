@@ -4,16 +4,34 @@ import {
   emptyCart,
   retrieveStateFromLocalStoreage,
   selectCart,
+  selectCartHasItems,
   selectTotalCartPrice,
 } from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
-import { useGetShopItemsByIdQuery } from "../../api/api"
+import { useGetShopItemsByIdQuery, useGetShopsQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/cart/cartSlice"
 import { useEffect, useMemo, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
 import GoogleMap from "../../components/GoogleMap"
-import { useGetAddressByGeolocationQuery } from "../../api/googleMapsApi"
+import {
+  useGetAddressByGeolocationQuery,
+  useGetRouteQuery,
+} from "../../api/googleApi"
+import { Coordinates } from "../../utils/utilTypes"
+import {
+  selectUser,
+  setAddress,
+  setEmail,
+  setName,
+  setPhone,
+} from "../../features/user/userSlice"
 export default function Cart() {
+  const [activeShop, setActiveShop] = useState<{
+    id: number
+    name: string
+    lat: number
+    lng: number
+  } | null>(null)
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
   const activeShopId = useSelector(selectActiveShopId)
@@ -31,65 +49,108 @@ export default function Cart() {
       }
     })
   }, [cart, shopItems])
-  const [userName, setUserName] = useState("")
-  const [userEmail, setUserEmail] = useState("")
-  const [userPhone, setUserPhone] = useState("")
-  const [userAddress, setUserAddress] = useState("")
   const dispatch = useDispatch()
   const [checkout] = useCheckoutMutation()
-
   useEffect(() => {
     dispatch(retrieveStateFromLocalStoreage())
   }, [])
-
-  const [lastClickGelocation, setLastClickGelocation] = useState({
-    lat: 100,
-    lng: 100,
+  const [lastClickGelocation, setLastClickGelocation] =
+    useState<Coordinates | null>(null)
+  const address = useGetAddressByGeolocationQuery(lastClickGelocation!, {
+    skip: !lastClickGelocation,
   })
-  const address = useGetAddressByGeolocationQuery(lastClickGelocation, {
-    skip: lastClickGelocation.lat > 95,
-  })
+  const route = useGetRouteQuery(
+    {
+      origin: lastClickGelocation!,
+      destination: {
+        lat: activeShop?.lat || 95,
+        lng: activeShop?.lng || 95,
+      },
+    },
+    {
+      skip: !activeShop || !lastClickGelocation,
+    },
+  )
   useEffect(() => {
     if (address.isSuccess && address.data.status === "OK") {
-      setUserAddress(address.data.results[0].formatted_address)
+      dispatch(setAddress(address.data.results[0].formatted_address))
     }
   }, [address])
-
+  const shops = useGetShopsQuery()
+  useEffect(() => {
+    const tmp = shops.data?.find((shop) => {
+      return shop.id === activeShopId
+    })
+    if (tmp) {
+      setActiveShop({
+        id: tmp.id,
+        lat: Number(tmp.lat), //TODO find out why rtk query returns string
+        lng: Number(tmp.lng),
+        name: tmp.name,
+      })
+    }
+  }, [shops, activeShopId])
+  const cartHasItems = useSelector(selectCartHasItems)
+  const currentUser = useSelector(selectUser)
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
         <div className="flex flex-col w-full border-2 border-gray-600 rounded-md">
-          <GoogleMap
-            onClick={(lat: number, lng: number) =>
-              setLastClickGelocation({ lat, lng })
-            }
-          ></GoogleMap>
+          {activeShop && (
+            <div>
+              <GoogleMap
+                onClick={(lat: number, lng: number) => {
+                  setLastClickGelocation({ lat, lng })
+                }}
+                markerLocations={[
+                  {
+                    position: {
+                      lat: activeShop.lat,
+                      lng: activeShop.lng,
+                    },
+                    title: activeShop.name,
+                  },
+                ]}
+              />
+              {route.data && (
+                <p className="mx-4">
+                  Distance to the shop:{" "}
+                  {route.data.routes[0].distanceMeters || 0} meters. Estimated
+                  travel time:{" "}
+                  {Math.ceil(
+                    Number(route.data.routes[0].duration.slice(0, -1)) / 60,
+                  )}{" "}
+                  minutes.
+                </p>
+              )}
+            </div>
+          )}
           <NamedInput
             name="Name"
-            value={userName}
+            value={currentUser.name}
             setInput={(e) => {
-              setUserName(e)
+              dispatch(setName(e))
             }}
           />
           <NamedInput
             name="Email"
-            value={userEmail}
+            value={currentUser.email}
             setInput={(e) => {
-              setUserEmail(e)
+              dispatch(setEmail(e))
             }}
           />
           <NamedInput
             name="Phone"
-            value={userPhone}
+            value={currentUser.phone}
             setInput={(e) => {
-              setUserPhone(e)
+              dispatch(setPhone(e))
             }}
           />
           <NamedInput
             name="Address"
-            value={userAddress}
+            value={currentUser.address}
             setInput={(e) => {
-              setUserAddress(e)
+              dispatch(setAddress(e))
             }}
           />
         </div>
@@ -101,8 +162,13 @@ export default function Cart() {
           className="w-40 h-12 border-2 font-bold rounded-xl border-gray-600"
           onClick={async () => {
             try {
-              const resutl = await checkout(cart).unwrap()
-              dispatch(emptyCart())
+              if (cartHasItems) {
+                const resutl = await checkout({
+                  cart: cart,
+                  user: currentUser,
+                }).unwrap()
+                dispatch(emptyCart())
+              }
             } catch (e) {
               throw "Failed to checkout"
             }

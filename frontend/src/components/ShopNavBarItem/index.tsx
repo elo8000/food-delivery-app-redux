@@ -7,7 +7,12 @@ export default function ShopNavBarItem(props: { name: string; id: number }) {
   const dispatch = useDispatch()
   const activeShopId = useSelector(selectActiveShopId)
   const cartHasItems = useSelector(selectCartHasItems)
-  const activeStyle = props.id === activeShopId ? styles.active : ""
+  const activeStyle =
+    props.id === activeShopId
+      ? styles.active
+      : cartHasItems
+      ? "bg-gray-100"
+      : ""
   return (
     <button
       className={`${activeStyle} w-1/2 p-4 rounded-md border-gray-600 border-2`}

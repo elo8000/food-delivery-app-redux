@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootState } from "../../app/store"
 
 export interface CartState {
-  userId: number
   activeShopId: number
   items: {
     id: number
@@ -16,7 +15,6 @@ export type ItemAdditionPayload = {
 }
 
 const initialState: CartState = {
-  userId: 1,
   activeShopId: 0,
   items: [],
 }
@@ -83,10 +81,6 @@ export const cartSlice = createSlice({
       state.items = []
       saveStateToLocalStorage(state)
     },
-    setUserId: (state, action: PayloadAction<number>) => {
-      state.userId = action.payload
-      saveStateToLocalStorage(state)
-    },
     setActiveShopId: (state, action: PayloadAction<number>) => {
       state.activeShopId = action.payload
       saveStateToLocalStorage(state)
@@ -101,7 +95,7 @@ export const cartSlice = createSlice({
           state.activeShopId = parsedCart.activeShopId
         }
       } catch (e) {
-        console.log("Invalid localstorage state or localstorage not avaliable")
+        console.log("Invalid localstorage state or localstorage not avaliable.")
       }
     },
   },

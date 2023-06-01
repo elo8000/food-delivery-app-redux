@@ -1,4 +1,5 @@
 const makeASeedArray = require("../utls/seed/makeASeedArray");
+const fixSeq = require("../utls/seed/fixSeq");
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -18,4 +19,5 @@ exports.seed = async function (knex) {
       50
     )
   );
+  await fixSeq(knex, "users");
 };

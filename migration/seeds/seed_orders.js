@@ -1,4 +1,5 @@
 const makeASeedArray = require("../utls/seed/makeASeedArray");
+const fixSeq = require("../utls/seed/fixSeq");
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -10,10 +11,11 @@ exports.seed = async function (knex) {
   await knex("orders").insert(
     makeASeedArray(
       {
-        user_id: () => faker.number.int(50),
+        user_id: () => faker.number.int({ min: 1, max: 50 }),
         timestamp: faker.date.recent,
       },
       100
     )
   );
+  await fixSeq(knex, "orders");
 };
