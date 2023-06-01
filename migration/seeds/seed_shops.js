@@ -19,13 +19,13 @@ exports.seed = async function (knex) {
         address: () => faker.location.streetAddress({ fullName: true }),
         lat: () =>
           faker.location.latitude({
-            min: KHARKIV_GEOLOCATION.lat - 2,
-            max: KHARKIV_GEOLOCATION.lat + 2,
+            min: KHARKIV_GEOLOCATION.lat - 0.05,
+            max: KHARKIV_GEOLOCATION.lat + 0.05,
           }),
         lng: () =>
           faker.location.latitude({
-            min: KHARKIV_GEOLOCATION.lng - 2,
-            max: KHARKIV_GEOLOCATION.lng + 2,
+            min: KHARKIV_GEOLOCATION.lng - 0.05,
+            max: KHARKIV_GEOLOCATION.lng + 0.05,
           }),
       },
       50

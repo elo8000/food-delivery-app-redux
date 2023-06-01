@@ -7,13 +7,19 @@ import {
   selectTotalCartPrice,
 } from "../../features/cart/cartSlice"
 import CartItems from "../../components/CartItems"
-import { useGetShopItemsByIdQuery } from "../../api/api"
+import { useGetShopItemsByIdQuery, useGetShopsQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/cart/cartSlice"
 import { useEffect, useMemo, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
 import GoogleMap from "../../components/GoogleMap"
 import { useGetAddressByGeolocationQuery } from "../../api/googleMapsApi"
 export default function Cart() {
+  const [currentShop, setCurrentShop] = useState<{
+    id: number
+    name: string
+    lat: number
+    lng: number
+  } | null>(null)
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
   const activeShopId = useSelector(selectActiveShopId)
@@ -37,11 +43,9 @@ export default function Cart() {
   const [userAddress, setUserAddress] = useState("")
   const dispatch = useDispatch()
   const [checkout] = useCheckoutMutation()
-
   useEffect(() => {
     dispatch(retrieveStateFromLocalStoreage())
   }, [])
-
   const [lastClickGelocation, setLastClickGelocation] = useState({
     lat: 100,
     lng: 100,
@@ -54,16 +58,40 @@ export default function Cart() {
       setUserAddress(address.data.results[0].formatted_address)
     }
   }, [address])
-
+  const shops = useGetShopsQuery()
+  useEffect(() => {
+    const tmp = shops.data?.find((shop) => {
+      return shop.id === activeShopId
+    })
+    if (tmp) {
+      setCurrentShop({
+        id: tmp.id,
+        lat: Number(tmp.lat), //TODO find out why rtk query returns string
+        lng: Number(tmp.lng),
+        name: tmp.name,
+      })
+    }
+  }, [shops, activeShopId])
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
         <div className="flex flex-col w-full border-2 border-gray-600 rounded-md">
-          <GoogleMap
-            onClick={(lat: number, lng: number) =>
-              setLastClickGelocation({ lat, lng })
-            }
-          ></GoogleMap>
+          {currentShop && (
+            <GoogleMap
+              onClick={(lat: number, lng: number) =>
+                setLastClickGelocation({ lat, lng })
+              }
+              markerLocations={[
+                {
+                  position: {
+                    lat: currentShop.lat,
+                    lng: currentShop.lng,
+                  },
+                  title: currentShop.name,
+                },
+              ]}
+            ></GoogleMap>
+          )}
           <NamedInput
             name="Name"
             value={userName}

@@ -3,7 +3,7 @@ import { useRef } from "react"
 
 export default function GoogleMap(props: {
   onClick?: (lat: number, lng: number) => void
-  markerLocations?: {
+  markerLocations: {
     position: {
       lat: number
       lng: number
@@ -24,13 +24,11 @@ export default function GoogleMap(props: {
   const onGoogleApiLoaded = ({ map, maps }: { map: any; maps: any }) => {
     mapRef.current = map
     mapsRef.current = maps
-    /*
     const mapMarker = new maps.Marker({
-      position: { lat: 100, lng: 100 },
+      position: props.markerLocations[0].position,
       map,
-      title: "Yo mama",
+      title: props.markerLocations[0].title,
     })
-    */
   }
 
   return (
@@ -44,14 +42,6 @@ export default function GoogleMap(props: {
         onGoogleApiLoaded={onGoogleApiLoaded}
         onClick={(e) => {
           if (props.onClick) props.onClick(e.lat, e.lng)
-          if (mapsRef.current) {
-            const mapMarker = new mapsRef.current.Marker({
-              position: { lat: e.lat, lng: e.lng },
-              map: mapRef.current,
-              title: "Yo mama",
-            })
-            console.log(mapMarker)
-          }
         }}
       />
     </div>
