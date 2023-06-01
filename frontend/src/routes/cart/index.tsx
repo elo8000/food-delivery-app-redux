@@ -12,9 +12,13 @@ import { selectActiveShopId } from "../../features/cart/cartSlice"
 import { useEffect, useMemo, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
 import GoogleMap from "../../components/GoogleMap"
-import { useGetAddressByGeolocationQuery } from "../../api/googleMapsApi"
+import {
+  useGetAddressByGeolocationQuery,
+  useGetRouteQuery,
+} from "../../api/googleApi"
+import { Coordinates } from "../../utils/utilTypes"
 export default function Cart() {
-  const [currentShop, setCurrentShop] = useState<{
+  const [activeShop, setActiveShop] = useState<{
     id: number
     name: string
     lat: number
@@ -46,13 +50,23 @@ export default function Cart() {
   useEffect(() => {
     dispatch(retrieveStateFromLocalStoreage())
   }, [])
-  const [lastClickGelocation, setLastClickGelocation] = useState({
-    lat: 100,
-    lng: 100,
+  const [lastClickGelocation, setLastClickGelocation] =
+    useState<Coordinates | null>(null)
+  const address = useGetAddressByGeolocationQuery(lastClickGelocation!, {
+    skip: !lastClickGelocation,
   })
-  const address = useGetAddressByGeolocationQuery(lastClickGelocation, {
-    skip: lastClickGelocation.lat > 95,
-  })
+  const route = useGetRouteQuery(
+    {
+      origin: lastClickGelocation!,
+      destination: {
+        lat: activeShop?.lat || 95,
+        lng: activeShop?.lng || 95,
+      },
+    },
+    {
+      skip: !activeShop || !lastClickGelocation,
+    },
+  )
   useEffect(() => {
     if (address.isSuccess && address.data.status === "OK") {
       setUserAddress(address.data.results[0].formatted_address)
@@ -64,7 +78,7 @@ export default function Cart() {
       return shop.id === activeShopId
     })
     if (tmp) {
-      setCurrentShop({
+      setActiveShop({
         id: tmp.id,
         lat: Number(tmp.lat), //TODO find out why rtk query returns string
         lng: Number(tmp.lng),
@@ -76,21 +90,34 @@ export default function Cart() {
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
         <div className="flex flex-col w-full border-2 border-gray-600 rounded-md">
-          {currentShop && (
-            <GoogleMap
-              onClick={(lat: number, lng: number) =>
-                setLastClickGelocation({ lat, lng })
-              }
-              markerLocations={[
-                {
-                  position: {
-                    lat: currentShop.lat,
-                    lng: currentShop.lng,
+          {activeShop && (
+            <div>
+              <GoogleMap
+                onClick={(lat: number, lng: number) => {
+                  setLastClickGelocation({ lat, lng })
+                }}
+                markerLocations={[
+                  {
+                    position: {
+                      lat: activeShop.lat,
+                      lng: activeShop.lng,
+                    },
+                    title: activeShop.name,
                   },
-                  title: currentShop.name,
-                },
-              ]}
-            ></GoogleMap>
+                ]}
+              />
+              {route.data && (
+                <p className="mx-4">
+                  Distance to the shop:{" "}
+                  {route.data.routes[0].distanceMeters || 0} meters. Estimated
+                  travel time:{" "}
+                  {Math.ceil(
+                    Number(route.data.routes[0].duration.slice(0, -1)) / 60,
+                  )}{" "}
+                  minutes.
+                </p>
+              )}
+            </div>
           )}
           <NamedInput
             name="Name"

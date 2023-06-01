@@ -5,7 +5,7 @@ export default function NamedInput(props: {
   placeholder?: string
 }) {
   return (
-    <div className="flex flex-col m-4">
+    <div className="flex flex-col mx-4 my-2">
       {props.name}
       <input
         onChange={(e) => props.setInput(e.target.value)}

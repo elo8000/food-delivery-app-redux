@@ -1,13 +1,11 @@
 import GoogleMapReact from "google-map-react"
 import { useRef } from "react"
+import { Coordinates } from "../../utils/utilTypes"
 
 export default function GoogleMap(props: {
   onClick?: (lat: number, lng: number) => void
   markerLocations: {
-    position: {
-      lat: number
-      lng: number
-    }
+    position: Coordinates
     title: string
   }[]
 }) {
@@ -33,7 +31,7 @@ export default function GoogleMap(props: {
 
   return (
     // Important! Always set the container height explicitly
-    <div style={{ height: "400px", width: "600px" }}>
+    <div style={{ height: "400px", width: "100%" }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: "AIzaSyDaoHl0JekUxZ8rKHyIHSnJ4ctrMtvPcqs" }}
         defaultCenter={defaultProps.center}
