@@ -1,6 +1,6 @@
 import { setItemCount } from "../../features/cart/cartSlice"
 import { useDispatch } from "react-redux"
-import { ShopItem } from "../../features/shop/shopSlice"
+import { ShopItem } from "../../utils/utilTypes"
 
 export type CartItemType = ShopItem & { count: number }
 

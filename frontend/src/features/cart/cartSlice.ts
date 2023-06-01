@@ -16,7 +16,7 @@ export type ItemAdditionPayload = {
 }
 
 const initialState: CartState = {
-  userId: 1,
+  userId: 1, // for the purpuse of this test assigment everyone is user 1
   activeShopId: 0,
   items: [],
 }

@@ -159,7 +159,15 @@ export default function Cart() {
           onClick={async () => {
             try {
               if (cartHasItems) {
-                const resutl = await checkout(cart).unwrap()
+                const resutl = await checkout({
+                  cart: cart,
+                  user: {
+                    name: userName,
+                    email: userEmail,
+                    address: userAddress,
+                    phone: userPhone,
+                  },
+                }).unwrap()
                 dispatch(emptyCart())
               }
             } catch (e) {

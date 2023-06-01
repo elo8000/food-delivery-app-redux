@@ -1,4 +1,4 @@
-import { ShopItem } from "../../features/shop/shopSlice"
+import { ShopItem } from "../../utils/utilTypes"
 import { addItem } from "../../features/cart/cartSlice"
 import { useDispatch } from "react-redux"
 

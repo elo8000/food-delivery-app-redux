@@ -1,4 +1,4 @@
-import { ShopItem } from "../../features/shop/shopSlice"
+import { ShopItem } from "../../utils/utilTypes"
 import Product from "../Product"
 import styles from "./styels.module.css"
 
