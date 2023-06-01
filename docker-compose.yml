@@ -9,40 +9,28 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
-  mysql:
-    image: 'mysql/mysql-server:8.0'
+  postgres:
+    image: 'postgres'
     ports:
-      - '3306:3306'
+      - '5432:5432'
     environment:
-      MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_DATABASE: 'test'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'test'
+      POSTGRES_USER: 'postgres'
     volumes:
-      - 'mysql:/var/lib/mysql'
+      - 'postgres:/var/lib/postgres'
     healthcheck:
-      test:
-        [
-          "CMD",
-          'mysqladmin',
-          'ping',
-          '-h',
-          'localhost',
-          '-u',
-          'root',
-          '-p$$MYSQL_ROOT_PASSWORD'
-        ]
+      test: [ "CMD", "pg_isready" ]
       timeout: 20s
       retries: 10
   migration:
     image: node:20-alpine
     build: ./migration
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
 volumes:
-  mysql:
+  postgres:
     driver: local

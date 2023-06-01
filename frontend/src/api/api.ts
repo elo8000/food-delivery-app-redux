@@ -4,7 +4,9 @@ import { CartState } from "../features/cart/cartSlice"
 
 // Define a service using a base URL and expected endpoints
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: process.env.REACT_APP_BACKEND_HOST || "http://localhost:3000",
+  }),
   endpoints: (builder) => ({
     getShops: builder.query<{ id: number; name: string }[], void>({
       query: () => `/shopNames`,
