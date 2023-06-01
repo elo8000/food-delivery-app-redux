@@ -11,7 +11,8 @@ exports.seed = async function (knex) {
     makeASeedArray(
       {
         name: faker.commerce.product,
-        shop_id: () => faker.number.int(50),
+        shop_id: () => faker.number.int({ min: 1, max: 50 }),
+        price: () => faker.number.int({ min: 1, max: 50 }),
       },
       500
     )

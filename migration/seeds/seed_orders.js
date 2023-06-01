@@ -10,7 +10,7 @@ exports.seed = async function (knex) {
   await knex("orders").insert(
     makeASeedArray(
       {
-        user_id: () => faker.number.int(50),
+        user_id: () => faker.number.int({ min: 1, max: 50 }),
         timestamp: faker.date.recent,
       },
       100
