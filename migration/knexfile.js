@@ -1,16 +1,17 @@
-// Update with your config settings.
-
+require("dotenv").config();
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 module.exports = {
   production: {
-    client: "mysql2",
+    client: "pg",
     connection: {
-      database: "test",
-      user: "root",
-      password: "password",
-      host: "host.docker.internal",
+      host: process.env.POSTGRES_HOST || "host.docker.internal",
+      port: Number(process.env.POSTGRES_PORT) || 5432,
+      user: process.env.POSTGRES_USER || "postgres",
+      password: process.env.POSTGRES_PASSWORD || "password",
+      database: process.env.POSTGRES_DATABASE || "test",
+      ssl: Boolean(process.env.POSTGRES_SSL),
     },
     pool: {
       min: 2,

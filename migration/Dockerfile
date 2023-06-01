@@ -10,6 +10,4 @@ COPY . .
 
 RUN yarn install
 
-RUN yarn migrate
-
-RUN yarn seed
+CMD yarn migrate && yarn seed

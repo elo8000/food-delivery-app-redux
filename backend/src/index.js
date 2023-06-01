@@ -1,11 +1,13 @@
+require("dotenv").config();
 const knex = require("knex")({
-  client: "mysql2",
+  client: "pg",
   connection: {
-    host: "host.docker.internal",
-    port: 3306,
-    user: "root",
-    password: "password",
-    database: "test",
+    host: process.env.POSTGRES_HOST || "host.docker.internal",
+    port: Number(process.env.POSTGRES_PORT) || 5432,
+    user: process.env.POSTGRES_USER || "postgres",
+    password: process.env.POSTGRES_PASSWORD || "password",
+    database: process.env.POSTGRES_DATABASE || "test",
+    ssl: Boolean(process.env.POSTGRES_SSL),
   },
   log: {
     warn(message) {

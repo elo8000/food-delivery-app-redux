@@ -11,6 +11,8 @@ import { useGetShopItemsByIdQuery } from "../../api/api"
 import { selectActiveShopId } from "../../features/cart/cartSlice"
 import { useEffect, useMemo, useState } from "react"
 import { useCheckoutMutation } from "../../api/api"
+import GoogleMap from "../../components/GoogleMap"
+import { useGetAddressByGeolocationQuery } from "../../api/googleMapsApi"
 export default function Cart() {
   const cart = useSelector(selectCart)
   const totalPrice = useSelector(selectTotalCartPrice)
@@ -40,10 +42,28 @@ export default function Cart() {
     dispatch(retrieveStateFromLocalStoreage())
   }, [])
 
+  const [lastClickGelocation, setLastClickGelocation] = useState({
+    lat: 100,
+    lng: 100,
+  })
+  const address = useGetAddressByGeolocationQuery(lastClickGelocation, {
+    skip: lastClickGelocation.lat > 95,
+  })
+  useEffect(() => {
+    if (address.isSuccess && address.data.status === "OK") {
+      setUserAddress(address.data.results[0].formatted_address)
+    }
+  }, [address])
+
   return (
     <div className="flex flex-col p-4 flex-grow">
       <div className="flex flex-grow gap-4">
         <div className="flex flex-col w-full border-2 border-gray-600 rounded-md">
+          <GoogleMap
+            onClick={(lat: number, lng: number) =>
+              setLastClickGelocation({ lat, lng })
+            }
+          ></GoogleMap>
           <NamedInput
             name="Name"
             value={userName}
