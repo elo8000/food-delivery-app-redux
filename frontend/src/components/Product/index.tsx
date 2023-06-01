@@ -10,7 +10,9 @@ export default function Product(props: { item: ShopItem }) {
         src={props.item.imageUrl || "http://via.placeholder.com/200x100"}
       ></img>
       <div className="flex flex-col h-full justify-end">
-        {props.item.name}
+        <p>
+          {props.item.name} UAH {props.item.price} each
+        </p>
         <button
           className="self-end border-2 border-gray-600 bg-gray-200 py-2 px-4 rounded-md"
           onClick={() => {
