@@ -29,5 +29,4 @@ build
 # Miscellaneous
 *.local
 
-api/
 vercel.json
