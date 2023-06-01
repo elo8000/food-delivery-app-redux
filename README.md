@@ -1,6 +1,7 @@
 # Food Delivery App
 
 Live preview available here
+
 https://app-delivery-frontend.vercel.app/
 
 ## How to run the application
