@@ -7,7 +7,11 @@
   },
   "scripts": {
     "migrate": "knex migrate:latest --env production",
-    "seed": "knex seed:run --env production"
+    "seed": "knex seed:run --env production",
+    "format": "prettier --write ."
   },
-  "devDependencies": {}
+  "packageManager": "yarn@1.22.19",
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  }
 }

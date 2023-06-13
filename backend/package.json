@@ -10,10 +10,13 @@
   },
   "scripts": {
     "dev": "nodemon ./src/index.js",
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "format": "prettier --write ./src"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
-    "nodemon": "^2.0.22"
-  }
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.8"
+  },
+  "packageManager": "yarn@1.22.19"
 }
