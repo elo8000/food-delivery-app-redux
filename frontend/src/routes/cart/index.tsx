@@ -162,7 +162,13 @@ export default function Cart() {
           className="w-40 h-12 border-2 font-bold rounded-xl border-gray-600"
           onClick={async () => {
             try {
-              if (cartHasItems) {
+              if (
+                cartHasItems &&
+                currentUser.address &&
+                currentUser.email &&
+                currentUser.name &&
+                currentUser.phone
+              ) {
                 const resutl = await checkout({
                   cart: cart,
                   user: currentUser,
