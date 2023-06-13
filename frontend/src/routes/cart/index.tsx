@@ -43,7 +43,7 @@ export default function Cart() {
     if (shopItems.length === 0) return []
     return cart.items.map((cartItem) => {
       const shopItem = shopItems.find((value) => value.id === cartItem.id)
-      if (shopItem === undefined) throw "No such item"
+      if (shopItem === undefined) throw new Error("No such item")
       return {
         count: cartItem.count,
         ...shopItem,
@@ -84,7 +84,7 @@ export default function Cart() {
     if (tmp) {
       setActiveShop({
         id: tmp.id,
-        lat: Number(tmp.lat), //TODO find out why rtk query returns string
+        lat: Number(tmp.lat),
         lng: Number(tmp.lng),
         name: tmp.name,
       })

@@ -32,7 +32,7 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<ItemAdditionPayload>) => {
-      let item = state.items.find((element) => {
+      const item = state.items.find((element) => {
         return element.id === action.payload.id
       })
       if (item) {
@@ -47,7 +47,7 @@ export const cartSlice = createSlice({
       saveStateToLocalStorage(state)
     },
     removeItem: (state, action: PayloadAction<number>) => {
-      let itemIndex = state.items.findIndex((item) => {
+      const itemIndex = state.items.findIndex((item) => {
         return item.id === action.payload
       })
       if (itemIndex !== -1) {
@@ -63,7 +63,7 @@ export const cartSlice = createSlice({
       state,
       action: PayloadAction<{ id: number; count: number; price: number }>,
     ) => {
-      let itemIndex = state.items.findIndex((item) => {
+      const itemIndex = state.items.findIndex((item) => {
         return item.id === action.payload.id
       })
       if (itemIndex !== -1) {
