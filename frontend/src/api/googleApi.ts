@@ -18,7 +18,7 @@ export type GoogleRouteResponse = {
   }[]
 }
 
-const GOOGLE_API_KEY = "AIzaSyDaoHl0JekUxZ8rKHyIHSnJ4ctrMtvPcqs"
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY //having google api key in frontend application is not safe by any means, but will do for now
 
 // Define a service using a base URL and expected endpoints
 export const googleMapsApi = createApi({
