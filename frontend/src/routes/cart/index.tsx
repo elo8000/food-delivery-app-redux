@@ -25,6 +25,7 @@ import {
   setName,
   setPhone,
 } from "../../features/user/userSlice"
+import { skipToken } from "@reduxjs/toolkit/dist/query"
 export default function Cart() {
   const [activeShop, setActiveShop] = useState<{
     id: number
@@ -60,16 +61,15 @@ export default function Cart() {
     skip: !lastClickGelocation,
   })
   const route = useGetRouteQuery(
-    {
-      origin: lastClickGelocation!,
-      destination: {
-        lat: activeShop?.lat || 95,
-        lng: activeShop?.lng || 95,
-      },
-    },
-    {
-      skip: !activeShop || !lastClickGelocation,
-    },
+    activeShop && activeShop.lat && activeShop.lng && lastClickGelocation
+      ? {
+          origin: lastClickGelocation!,
+          destination: {
+            lat: activeShop.lat,
+            lng: activeShop.lng,
+          },
+        }
+      : skipToken,
   )
   useEffect(() => {
     if (address.isSuccess && address.data.status === "OK") {

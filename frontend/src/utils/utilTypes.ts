@@ -2,6 +2,7 @@ export type Coordinates = {
   lat: number
   lng: number
 }
+
 export type UserInfo = {
   name: string
   email: string
