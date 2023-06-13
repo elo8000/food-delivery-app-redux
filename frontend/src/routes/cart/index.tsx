@@ -170,7 +170,7 @@ export default function Cart() {
                 dispatch(emptyCart())
               }
             } catch (e) {
-              throw "Failed to checkout"
+              throw Error("Failed to checkout")
             }
           }}
         >
